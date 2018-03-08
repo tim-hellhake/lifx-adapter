@@ -1,0 +1,40 @@
+{
+  "name": "lifx-adapter",
+  "version": "0.1.0",
+  "description": "Lifx smart bulb adapter plugin for Mozilla IoT Gateway",
+  "main": "main.py",
+  "keywords": [
+    "mozilla",
+    "iot",
+    "adapter",
+    "lifx"
+  ],
+  "homepage": "https://github.com/infincia/lifx-adapter",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/infincia/lifx-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infincia/lifx-adapter/issues"
+  },
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "lib",
+    "main.py",
+    "pkg/__init__.py",
+    "pkg/lifx_adapter.py",
+    "pkg/lifx_device.py",
+    "pkg/lifx_property.py",
+    "pkg/util.py"
+  ],
+  "moziot": {
+    "api": {
+      "min": 1,
+      "max": 2
+    },
+    "plugin": true,
+    "exec": "python3 {path}/main.py"
+  }
+}
