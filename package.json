@@ -1,6 +1,6 @@
 {
   "name": "lifx-adapter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lifx smart bulb adapter plugin for Mozilla IoT Gateway",
   "main": "main.py",
   "keywords": [
