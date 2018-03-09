@@ -58,7 +58,7 @@ class LifxBulb(LifxDevice):
 
         if self.is_color():
             print("Bulb supports color")
-            self.type = 'dimmableColorLight'
+            self.type = 'onOffColorLight'
 
             self.properties['color'] = LifxBulbProperty(self,
                                                        'color',
@@ -83,16 +83,16 @@ class LifxBulb(LifxDevice):
         else:
             self.type = 'dimmableLight'
 
-        self.properties['level'] = LifxBulbProperty(self,
-                                                   'level',
-                                                   {  
-                                                      'type': 'number',
-                                                      'unit': 'percent',
-                                                      'min': 0,
-                                                      'max': 100
-                                                   },
-                                                   self.brightness())
-
+        if not self.is_color()
+            self.properties['level'] = LifxBulbProperty(self,
+                                                       'level',
+                                                       {  
+                                                          'type': 'number',
+                                                          'unit': 'percent',
+                                                          'min': 0,
+                                                          'max': 100
+                                                       },
+                                                       self.brightness())
 
         self.properties['on'] = LifxBulbProperty(self, 
                                                  'on', 
