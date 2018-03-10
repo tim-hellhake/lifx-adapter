@@ -21,7 +21,7 @@ Bulb names are reported by the Lifx API, so they should automatically show up in
 ## Untested but _Should Work_
  
 * All other Lifx bulbs
-    * Represented as `dimmableColorLight` or `dimmableLight` based on their self-reported color and white temperature abilities
+    * Represented as `onOffColorLight`, `dimmableColorLight` or `dimmableLight` based on their self-reported color and white temperature abilities
 
 # Requirements
 

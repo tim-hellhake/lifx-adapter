@@ -58,7 +58,7 @@ class LifxBulb(LifxDevice):
 
         if self.is_color():
             print("Bulb supports color")
-            self.type = 'dimmableColorLight'
+            self.type = 'onOffColorLight'
 
             self.properties['color'] = LifxBulbProperty(self,
                                                        'color',
@@ -66,31 +66,33 @@ class LifxBulb(LifxDevice):
                                                            'type': 'string'
                                                        },
                                                        hsv_to_rgb(*self.hsv()))
+        elif gateway_addon.API_VERSION >= 2 and self.is_white_temperature():
+            print("Bulb supports white temperature") 
+            self.type = 'dimmableColorLight'
+
+            self.properties['colorTemperature'] = \
+                LifxBulbProperty(self,
+                                 'colorTemperature',
+                                 {  
+                                     'type': 'number',
+                                     'unit': 'kelvin',
+                                     'min': 1500,
+                                     'max': 9000
+                                 },
+                                 self.temperature())
         else:
             self.type = 'dimmableLight'
 
-        if gateway_addon.API_VERSION >= 2 and self.is_white_temperature():
-            print("Bulb supports white temperature") 
-            self.properties['colorTemperature'] = LifxBulbProperty(self,
-                                                                   'colorTemperature',
-                                                                   {  
-                                                                      'type': 'number',
-                                                                      'unit': 'kelvin',
-                                                                      'min': 1500,
-                                                                      'max': 9000
-                                                                   },
-                                                                   self.temperature())
-
-        self.properties['level'] = LifxBulbProperty(self,
-                                                   'level',
-                                                   {  
-                                                      'type': 'number',
-                                                      'unit': 'percent',
-                                                      'min': 0,
-                                                      'max': 100
-                                                   },
-                                                   self.brightness())
-
+        if not self.is_color()
+            self.properties['level'] = LifxBulbProperty(self,
+                                                       'level',
+                                                       {  
+                                                          'type': 'number',
+                                                          'unit': 'percent',
+                                                          'min': 0,
+                                                          'max': 100
+                                                       },
+                                                       self.brightness())
 
         self.properties['on'] = LifxBulbProperty(self, 
                                                  'on', 
