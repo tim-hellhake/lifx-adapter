@@ -2,6 +2,7 @@
   "name": "lifx-adapter",
   "version": "0.1.1",
   "description": "Lifx smart bulb adapter plugin for Mozilla IoT Gateway",
+  "author": "Stephen Oliver",
   "main": "main.py",
   "keywords": [
     "mozilla",
