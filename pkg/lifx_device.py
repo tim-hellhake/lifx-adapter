@@ -83,7 +83,7 @@ class LifxBulb(LifxDevice):
         else:
             self.type = 'dimmableLight'
 
-        if not self.is_color()
+        if not self.is_color():
             self.properties['level'] = LifxBulbProperty(self,
                                                        'level',
                                                        {  
