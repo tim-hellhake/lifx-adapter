@@ -81,6 +81,7 @@ class LifxBulb(LifxDevice):
                                  },
                                  self.temperature())
         else:
+            print("Bulb supports dimming")
             self.type = 'dimmableLight'
 
         if not self.is_color():
