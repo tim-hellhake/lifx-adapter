@@ -148,7 +148,6 @@ class LifxBulb(LifxDevice):
         Determine the current color of the light.
         """
         color = self.lifxlan_dev.get_color()
-        print("Getting HSV")
         hue = color[0]
         saturation = color[1]
         raw_brightness = color[2]
