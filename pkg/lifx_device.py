@@ -153,7 +153,7 @@ class LifxBulb(LifxDevice):
         saturation = color[1]
         raw_brightness = color[2]
         percent_brightness = (raw_brightness / 65535.0) * 100.0
-        print("Current HSV: <hue:" + str(hue) + ", sat:" + str(saturation) + ", bright:" + str(percent_brightness) + ">")
+        #print("Current HSV: <hue:" + str(hue) + ", sat:" + str(saturation) + ", bright:" + str(percent_brightness) + ">")
         value = int(percent_brightness)
 
         return hue, saturation, value
@@ -162,7 +162,7 @@ class LifxBulb(LifxDevice):
         """
         Determine the current color of the light.
         """
-        print("Set HSV: <hue:" + str(value[0]) + ", sat:" + str(value[1]) + ", bright:" + str(value[2]) + ">")
+        #print("Set HSV: <hue:" + str(value[0]) + ", sat:" + str(value[1]) + ", bright:" + str(value[2]) + ">")
         self.lifxlan_dev.set_hue(value[0])
         self.lifxlan_dev.set_saturation(value[1])
         self.lifxlan_dev.set_brightness(value[2])
@@ -172,7 +172,7 @@ class LifxBulb(LifxDevice):
         Determine the current brightness of the light.
         """
         hue, saturation, percent_brightness = self.hsv()
-        print("Current brightness: <bright:" + str(percent_brightness) + ">")
+        #print("Current brightness: <bright:" + str(percent_brightness) + ">")
         return percent_brightness
 
     def set_brightness(self, level):
@@ -180,7 +180,7 @@ class LifxBulb(LifxDevice):
         Set the brightness of the light.
         """
         raw_brightness = (level / 100.0) * 65535.0
-        print("Set brightness: <bright:" + str(level) + ", raw:" + str(raw_brightness) + ">")
+        #print("Set brightness: <bright:" + str(level) + ", raw:" + str(raw_brightness) + ">")
         self.lifxlan_dev.set_brightness(raw_brightness)
 
     def temperature(self):
@@ -189,12 +189,12 @@ class LifxBulb(LifxDevice):
         """
         color = self.lifxlan_dev.get_color()
         value = color[3]
-        print("Current color temperature: <temp:" + str(value)  + ">")
+        #print("Current color temperature: <temp:" + str(value)  + ">")
         return value
 
     def set_temperature(self, value):
         """
         Set the white temperature of the light.
         """
-        print("Set color temperature: <temp:" + str(value) + ">")
+        #print("Set color temperature: <temp:" + str(value) + ">")
         self.lifxlan_dev.set_colortemp(value)
