@@ -48,3 +48,18 @@ git clone https://github.com/infincia/lifx-adapter.git
 
 Then restart the gateway and the Lifx addon should be available. 
 
+# Troubleshooting
+
+If you encounter a `DistutilsOptionError` when building the package, the error
+is caused by the packaged version of `pip` that comes with Debian based Linux
+distributions, including Raspbian.  The upstream version of `pip` does not have
+this problem.
+
+The simplest fix is to "upgrade" `pip`:
+
+    pip3 install --upgrade pip
+
+Note that this won't actually upgrade the *packaged* version, which will be left
+alone, but will instead install the upstream version of `pip` to
+`/usr/local/bin/pip3`. As long as `/usr/local/bin` appears first in `$PATH`,
+scripts will use that upstream version instead.
