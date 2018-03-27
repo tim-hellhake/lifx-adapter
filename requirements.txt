@@ -1,1 +1,1 @@
-git+https://github.com/mclarkk/lifxlan.git
+lifxlan>=1.2.3
