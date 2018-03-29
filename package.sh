@@ -14,7 +14,14 @@ mkdir lib
 mkdir package
 
 # Pull down Python dependencies
-pip3 install -r requirements.txt -t lib --no-binary lifxlan --prefix ""
+SYSTEM_OPTION=
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    if [ "$ID" = "raspbian" ]; then
+        SYSTEM_OPTION="--system"
+    fi
+fi
+pip3 install $SYSTEM_OPTION -r requirements.txt -t lib --no-binary lifxlan --prefix ""
 
 # Put package together
 cp -r lib pkg LICENSE package.json *.py package/
