@@ -7,31 +7,16 @@ version=$(grep version package.json | cut -d: -f2 | cut -d\" -f2)
 # Clean up from previous releases
 rm -rf *.tgz package
 rm -f SHA256SUMS
-rm -rf lib
-
-# Prep new package
-mkdir lib
-mkdir package
-
-# Pull down Python dependencies
-SYSTEM_OPTION=
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    if [ "$ID" = "raspbian" ]; then
-        SYSTEM_OPTION="--system"
-    fi
-fi
-pip3 install $SYSTEM_OPTION -r requirements.txt -t lib --no-binary lifxlan --prefix ""
 
 # Put package together
-cp -r lib pkg LICENSE package.json *.py package/
+mkdir package
+cp -r pkg LICENSE package.json *.py requirements.txt setup.cfg package/
 find package -type f -name '*.pyc' -delete
 find package -type d -empty -delete
 
 # Generate checksums
 cd package
-sha256sum *.py pkg/*.py LICENSE > SHA256SUMS
-find lib -type f -exec sha256sum {} \; >> SHA256SUMS
+sha256sum *.py pkg/*.py LICENSE requirements.txt setup.cfg > SHA256SUMS
 cd -
 
 # Make the tarball
