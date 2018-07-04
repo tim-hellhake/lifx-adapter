@@ -20,6 +20,7 @@ class LifxProperty(Property):
         Property.__init__(self, device, name, description)
         self.set_cached_value(value)
 
+
 class LifxBulbProperty(LifxProperty):
     """Property type for Lifx smart bulbs."""
 

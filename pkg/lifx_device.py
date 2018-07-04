@@ -7,9 +7,6 @@ import time
 import gateway_addon
 from gateway_addon import Device
 
-from lifxlan import LifxLAN
-from lifxlan import Device as LifxLANDevice
-
 from .lifx_property import LifxBulbProperty
 from .util import hsv_to_rgb
 
@@ -30,6 +27,7 @@ class LifxDevice(Device):
         lifxlan_dev -- the lifxlan device object to initialize from
         """
         Device.__init__(self, adapter, _id)
+        self._type = []
 
         self.lifxlan_dev = lifxlan_dev
         self.description = lifxlan_dev.get_product_name()
@@ -40,7 +38,6 @@ class LifxDevice(Device):
         self.t = threading.Thread(target=self.poll)
         self.t.daemon = True
         self.t.start()
-
 
 
 class LifxBulb(LifxDevice):
@@ -56,52 +53,63 @@ class LifxBulb(LifxDevice):
         """
         LifxDevice.__init__(self, adapter, _id, lifxlan_dev)
 
+        self._type.extend(['OnOffSwitch', 'Light'])
+
         if self.is_color():
             print("Bulb supports color")
             self.type = 'onOffColorLight'
+            self._type.append('ColorControl')
 
-            self.properties['color'] = LifxBulbProperty(self,
-                                                       'color',
-                                                       {  
-                                                           'type': 'string'
-                                                       },
-                                                       hsv_to_rgb(*self.hsv()))
+            self.properties['color'] = LifxBulbProperty(
+                self,
+                'color',
+                {
+                    '@type': 'ColorProperty',
+                    'label': 'Color',
+                    'type': 'string'
+                },
+                hsv_to_rgb(*self.hsv()))
         elif gateway_addon.API_VERSION >= 2 and self.is_white_temperature():
-            print("Bulb supports white temperature") 
+            print("Bulb supports white temperature")
             self.type = 'dimmableColorLight'
+            self._type.append('ColorControl')
 
-            self.properties['colorTemperature'] = \
-                LifxBulbProperty(self,
-                                 'colorTemperature',
-                                 {  
-                                     'type': 'number',
-                                     'unit': 'kelvin',
-                                     'min': 1500,
-                                     'max': 9000
-                                 },
-                                 self.temperature())
+            self.properties['colorTemperature'] = LifxBulbProperty(
+                self,
+                'colorTemperature',
+                {
+                    '@type': 'ColorTemperatureProperty',
+                    'label': 'Color Temperature',
+                    'type': 'number',
+                    'unit': 'kelvin',
+                    'min': 1500,
+                    'max': 9000
+                },
+                self.temperature())
         else:
             print("Bulb supports dimming")
             self.type = 'dimmableLight'
 
         if not self.is_color():
-            self.properties['level'] = LifxBulbProperty(self,
-                                                       'level',
-                                                       {  
-                                                          'type': 'number',
-                                                          'unit': 'percent',
-                                                          'min': 0,
-                                                          'max': 100
-                                                       },
-                                                       self.brightness())
+            self.properties['level'] = LifxBulbProperty(
+                self,
+                'level',
+                {
+                    '@type': 'BrightnessProperty',
+                    'label': 'Brightness',
+                    'type': 'number',
+                    'unit': 'percent',
+                    'min': 0,
+                    'max': 100
+                },
+                self.brightness())
 
-        self.properties['on'] = LifxBulbProperty(self, 
-                                                 'on', 
+        self.properties['on'] = LifxBulbProperty(self,
+                                                 'on',
                                                  {
                                                      'type': 'boolean'
-                                                 }, 
+                                                 },
                                                  self.is_on())
-
 
     def poll(self):
         """Poll the device for changes."""
@@ -115,7 +123,6 @@ class LifxBulb(LifxDevice):
             except Exception as e:
                 print("WARNING: LifxBulb polling failed: " + str(e))
                 continue
-
 
     def is_color(self):
         """
@@ -142,7 +149,6 @@ class LifxBulb(LifxDevice):
         Set whether or not the light is on.
         """
         self.lifxlan_dev.set_power(65535) if state else self.lifxlan_dev.set_power(0)
-
 
     def hsv(self):
         """
