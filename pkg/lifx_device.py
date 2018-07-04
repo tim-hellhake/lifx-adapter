@@ -13,6 +13,7 @@ from .util import hsv_to_rgb
 print = functools.partial(print, flush=True)
 
 _POLL_INTERVAL = 5
+_DEBUG = False
 
 
 class LifxDevice(Device):
@@ -56,7 +57,9 @@ class LifxBulb(LifxDevice):
         self._type.extend(['OnOffSwitch', 'Light'])
 
         if self.is_color():
-            print("Bulb supports color")
+            if _DEBUG:
+                print("Bulb supports color")
+
             self.type = 'onOffColorLight'
             self._type.append('ColorControl')
 
@@ -70,7 +73,9 @@ class LifxBulb(LifxDevice):
                 },
                 hsv_to_rgb(*self.hsv()))
         elif gateway_addon.API_VERSION >= 2 and self.is_white_temperature():
-            print("Bulb supports white temperature")
+            if _DEBUG:
+                print("Bulb supports white temperature")
+
             self.type = 'dimmableColorLight'
             self._type.append('ColorControl')
 
@@ -82,12 +87,14 @@ class LifxBulb(LifxDevice):
                     'label': 'Color Temperature',
                     'type': 'number',
                     'unit': 'kelvin',
-                    'min': 1500,
-                    'max': 9000
+                    'min': lifxlan_dev.get_min_kelvin(),
+                    'max': lifxlan_dev.get_max_kelvin()
                 },
                 self.temperature())
         else:
-            print("Bulb supports dimming")
+            if _DEBUG:
+                print("Bulb supports dimming")
+
             self.type = 'dimmableLight'
 
         if not self.is_color():
@@ -116,8 +123,6 @@ class LifxBulb(LifxDevice):
         while True:
             time.sleep(_POLL_INTERVAL)
             try:
-                #self.lifxlan_dev.get_power()
-                #self.lifxlan_dev.get_color()
                 for prop in self.properties.values():
                     prop.update()
             except Exception as e:
@@ -148,59 +153,71 @@ class LifxBulb(LifxDevice):
         """
         Set whether or not the light is on.
         """
-        self.lifxlan_dev.set_power(65535) if state else self.lifxlan_dev.set_power(0)
+        if state:
+            self.lifxlan_dev.set_power(65535)
+        else:
+            self.lifxlan_dev.set_power(0)
 
     def hsv(self):
         """
         Determine the current color of the light.
         """
-        color = self.lifxlan_dev.get_color()
-        hue = color[0]
-        saturation = color[1]
-        raw_brightness = color[2]
-        percent_brightness = (raw_brightness / 65535.0) * 100.0
-        #print("Current HSV: <hue:" + str(hue) + ", sat:" + str(saturation) + ", bright:" + str(percent_brightness) + ">")
-        value = int(percent_brightness)
+        color = self.lifxlan_dev.get_color()[:3]
 
-        return hue, saturation, value
+        if _DEBUG:
+            print("Current HSV: <hue:{}, sat:{}, bright:{}>".format(*color))
+
+        return color
 
     def set_hsv(self, value):
         """
         Determine the current color of the light.
         """
-        #print("Set HSV: <hue:" + str(value[0]) + ", sat:" + str(value[1]) + ", bright:" + str(value[2]) + ">")
-        self.lifxlan_dev.set_hue(value[0])
-        self.lifxlan_dev.set_saturation(value[1])
-        self.lifxlan_dev.set_brightness(value[2])
+        if _DEBUG:
+            print("Set HSV: <hue:{}, sat:{}, bright:{}>".format(*value))
+
+        value = list(value) + [3500]
+        self.lifxlan_dev.set_color(value)
 
     def brightness(self):
         """
         Determine the current brightness of the light.
         """
-        hue, saturation, percent_brightness = self.hsv()
-        #print("Current brightness: <bright:" + str(percent_brightness) + ">")
-        return percent_brightness
+        hue, saturation, brightness = self.hsv()
+
+        if _DEBUG:
+            print("Current brightness: <bright:{}>".format(brightness))
+
+        return int(brightness / 65535.0 * 100.0)
 
     def set_brightness(self, level):
         """
         Set the brightness of the light.
         """
-        raw_brightness = (level / 100.0) * 65535.0
-        #print("Set brightness: <bright:" + str(level) + ", raw:" + str(raw_brightness) + ">")
-        self.lifxlan_dev.set_brightness(raw_brightness)
+        brightness = int(level / 100.0 * 65535.0)
+
+        if _DEBUG:
+            print("Set brightness: <bright:{}, raw:{}>"
+                  .format(level, brightness))
+
+        self.lifxlan_dev.set_brightness(brightness)
 
     def temperature(self):
         """
         Determine the current white temperature of the light.
         """
-        color = self.lifxlan_dev.get_color()
-        value = color[3]
-        #print("Current color temperature: <temp:" + str(value)  + ">")
+        value = self.lifxlan_dev.get_color()[3]
+
+        if _DEBUG:
+            print("Current color temperature: <temp:{}>".format(value))
+
         return value
 
     def set_temperature(self, value):
         """
         Set the white temperature of the light.
         """
-        #print("Set color temperature: <temp:" + str(value) + ">")
+        if _DEBUG:
+            print("Set color temperature: <temp:{}>".format(value))
+
         self.lifxlan_dev.set_colortemp(value)

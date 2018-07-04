@@ -1,27 +1,24 @@
 # lifx-adapter
 
-Lifx smart bulb adapter for Mozilla IoT Gateway.
+LIFX smart bulb adapter for Mozilla IoT Gateway.
 
 Largely derived from https://github.com/mozilla-iot/tplink-adapter
 
-There are no settings, the adapter will automatically discover any Lifx bulbs on the same local network, and you can then add them individually.
+There are no settings, the adapter will automatically discover any LIFX bulbs on the same local network, and you can then add them individually.
 
-Bulb names are reported by the Lifx API, so they should automatically show up in the gateway web interface if you have set names for them in the Lifx app.
+Bulb names are reported by the LIFX API, so they should automatically show up in the gateway web interface if you have set names for them in the LIFX app.
 
 
 # Supported Devices
 
 ## Tested and Working
 
-* A19 dusk-to-dawn
-    * Represented as `dimmableColorLight`
-        * `colorTemperature` property for white temperature
-        * `level` property for brightness
+* Mini Day & Dusk
+* A19
 
 ## Untested but _Should Work_
  
-* All other Lifx bulbs
-    * Represented as `onOffColorLight`, `dimmableColorLight` or `dimmableLight` based on their self-reported color and white temperature abilities
+* All other LIFX bulbs
 
 # Requirements
 
