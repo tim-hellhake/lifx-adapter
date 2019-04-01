@@ -1,4 +1,4 @@
-"""Lifx adapter for Mozilla IoT Gateway."""
+"""Lifx adapter for Mozilla WebThings Gateway."""
 
 from gateway_addon import Adapter
 from lifxlan import LifxLAN
