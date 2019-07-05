@@ -8,7 +8,6 @@ There are no settings, the adapter will automatically discover any LIFX bulbs on
 
 Bulb names are reported by the LIFX API, so they should automatically show up in the gateway web interface if you have set names for them in the LIFX app.
 
-
 # Supported Devices
 
 ## Tested and Working
@@ -38,7 +37,7 @@ Clone this repo inside `~/.mozilla-iot/addons/` and run the packaging script:
 ```
 cd ~/.mozilla-iot/addons
 
-git clone https://github.com/infincia/lifx-adapter.git
+git clone https://github.com/mrstegeman/lifx-adapter.git
 
 ./package.sh
 ```
@@ -60,3 +59,7 @@ Note that this won't actually upgrade the *packaged* version, which will be left
 alone, but will instead install the upstream version of `pip` to
 `/usr/local/bin/pip3`. As long as `/usr/local/bin` appears first in `$PATH`,
 scripts will use that upstream version instead.
+
+# Credits
+
+This add-on was originally created by Stephen Oliver (@steveatinfincia).

@@ -9,11 +9,11 @@ import time
 
 sys.path.append(path.join(path.dirname(path.abspath(__file__)), 'lib'))
 
-from pkg.lifx_adapter import LifxAdapter  # flake8: noqa
+from pkg.lifx_adapter import LifxAdapter  # noqa
 
 
 _API_VERSION = {
-    'min': 1,
+    'min': 2,
     'max': 2,
 }
 _ADAPTER = None

@@ -1,9 +1,9 @@
 {
   "name": "lifx-adapter",
   "display_name": "LIFX",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "LIFX smart bulb adapter plugin for Mozilla WebThings Gateway",
-  "author": "Stephen Oliver",
+  "author": "Michael Stegeman",
   "main": "bootstrap.py",
   "keywords": [
     "mozilla",
@@ -11,14 +11,14 @@
     "adapter",
     "lifx"
   ],
-  "homepage": "https://github.com/infincia/lifx-adapter",
+  "homepage": "https://github.com/mrstegeman/lifx-adapter",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/infincia/lifx-adapter.git"
+    "url": "https://github.com/mrstegeman/lifx-adapter.git"
   },
   "bugs": {
-    "url": "https://github.com/infincia/lifx-adapter/issues"
+    "url": "https://github.com/mrstegeman/lifx-adapter/issues"
   },
   "files": [
     "LICENSE",
@@ -35,7 +35,7 @@
   ],
   "moziot": {
     "api": {
-      "min": 1,
+      "min": 2,
       "max": 2
     },
     "plugin": true,

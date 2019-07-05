@@ -1,11 +1,9 @@
 """Lifx adapter for Mozilla WebThings Gateway."""
 
+from gateway_addon import Device
 import functools
 import threading
 import time
-
-import gateway_addon
-from gateway_addon import Device
 
 from .lifx_property import LifxBulbProperty
 from .util import hsv_to_rgb
@@ -72,7 +70,7 @@ class LifxBulb(LifxDevice):
                     'type': 'string'
                 },
                 hsv_to_rgb(*self.hsv()))
-        elif gateway_addon.API_VERSION >= 2 and self.is_white_temperature():
+        elif self.is_white_temperature():
             if _DEBUG:
                 print("Bulb supports white temperature")
 
@@ -130,38 +128,28 @@ class LifxBulb(LifxDevice):
                 continue
 
     def is_color(self):
-        """
-        Determine whether or not the light is color-changing.
-        """
+        """Determine whether or not the light is color-changing."""
         return bool(self.lifxlan_dev.supports_color())
 
     def is_white_temperature(self):
-        """
-        Determine whether or not the light can change white temperature.
-        """
+        """Determine whether or not the light can change white temperature."""
         # the only bulb that doesn't support temperature is the mini white,
         # everything else should support it
         return bool(self.lifxlan_dev.supports_temperature())
 
     def is_on(self):
-        """
-        Determine whether or not the light is on.
-        """
+        """Determine whether or not the light is on."""
         return bool(self.lifxlan_dev.get_power())
 
     def set_on(self, state):
-        """
-        Set whether or not the light is on.
-        """
+        """Set whether or not the light is on."""
         if state:
             self.lifxlan_dev.set_power(65535)
         else:
             self.lifxlan_dev.set_power(0)
 
     def hsv(self):
-        """
-        Determine the current color of the light.
-        """
+        """Determine the current color of the light."""
         color = self.lifxlan_dev.get_color()[:3]
 
         if _DEBUG:
@@ -171,7 +159,9 @@ class LifxBulb(LifxDevice):
 
     def set_hsv(self, value):
         """
-        Determine the current color of the light.
+        Set the light color.
+
+        value -- new color as [h, s, v]
         """
         if _DEBUG:
             print("Set HSV: <hue:{}, sat:{}, bright:{}>".format(*value))
@@ -180,9 +170,7 @@ class LifxBulb(LifxDevice):
         self.lifxlan_dev.set_color(value)
 
     def brightness(self):
-        """
-        Determine the current brightness of the light.
-        """
+        """Determine the current brightness of the light."""
         hue, saturation, brightness = self.hsv()
 
         if _DEBUG:
@@ -193,6 +181,8 @@ class LifxBulb(LifxDevice):
     def set_brightness(self, level):
         """
         Set the brightness of the light.
+
+        level -- new brightness
         """
         brightness = int(level / 100.0 * 65535.0)
 
@@ -203,9 +193,7 @@ class LifxBulb(LifxDevice):
         self.lifxlan_dev.set_brightness(brightness)
 
     def temperature(self):
-        """
-        Determine the current white temperature of the light.
-        """
+        """Determine the current white temperature of the light."""
         value = self.lifxlan_dev.get_color()[3]
 
         if _DEBUG:
@@ -216,6 +204,8 @@ class LifxBulb(LifxDevice):
     def set_temperature(self, value):
         """
         Set the white temperature of the light.
+
+        value -- new temperature
         """
         if _DEBUG:
             print("Set color temperature: <temp:{}>".format(value))
