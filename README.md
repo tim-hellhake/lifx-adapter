@@ -1,6 +1,6 @@
 # lifx-adapter
 
-LIFX smart bulb adapter for Mozilla IoT Gateway.
+LIFX smart bulb adapter for Mozilla WebThings Gateway.
 
 Largely derived from https://github.com/mozilla-iot/tplink-adapter
 
