@@ -14,6 +14,7 @@ Bulb names are reported by the LIFX API, so they should automatically show up in
 
 * Mini Day & Dusk
 * A19
+* BR30+
 
 ## Untested but _Should Work_
  

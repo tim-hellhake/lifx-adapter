@@ -39,6 +39,8 @@ class LifxBulbProperty(LifxProperty):
             self.device.set_temperature(value)
         elif self.name == 'level':
             self.device.set_brightness(value)
+        elif self.name == 'infraredLevel':
+            self.device.set_infrared_level(value)
         else:
             return
 
@@ -59,6 +61,8 @@ class LifxBulbProperty(LifxProperty):
             value = self.device.temperature()
         elif self.name == 'level':
             value = self.device.brightness()
+        elif self.name == 'infraredLevel':
+            value = self.device.infrared_level()
         else:
             return
 

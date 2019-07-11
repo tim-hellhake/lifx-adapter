@@ -67,9 +67,10 @@ class LifxBulb(LifxDevice):
                 {
                     '@type': 'ColorProperty',
                     'label': 'Color',
-                    'type': 'string'
+                    'type': 'string',
                 },
-                hsv_to_rgb(*self.hsv()))
+                hsv_to_rgb(*self.hsv())
+            )
         elif self.is_white_temperature():
             if _DEBUG:
                 print("Bulb supports white temperature")
@@ -83,12 +84,13 @@ class LifxBulb(LifxDevice):
                 {
                     '@type': 'ColorTemperatureProperty',
                     'label': 'Color Temperature',
-                    'type': 'number',
+                    'type': 'integer',
                     'unit': 'kelvin',
-                    'min': lifxlan_dev.get_min_kelvin(),
-                    'max': lifxlan_dev.get_max_kelvin()
+                    'minimum': lifxlan_dev.get_min_kelvin(),
+                    'maximum': lifxlan_dev.get_max_kelvin(),
                 },
-                self.temperature())
+                self.temperature()
+            )
         else:
             if _DEBUG:
                 print("Bulb supports dimming")
@@ -102,19 +104,38 @@ class LifxBulb(LifxDevice):
                 {
                     '@type': 'BrightnessProperty',
                     'label': 'Brightness',
-                    'type': 'number',
+                    'type': 'integer',
                     'unit': 'percent',
-                    'min': 0,
-                    'max': 100
+                    'minimum': 0,
+                    'maximum': 100,
                 },
-                self.brightness())
+                self.brightness()
+            )
 
-        self.properties['on'] = LifxBulbProperty(self,
-                                                 'on',
-                                                 {
-                                                     'type': 'boolean'
-                                                 },
-                                                 self.is_on())
+        if self.is_infrared():
+            self.properties['infraredLevel'] = LifxBulbProperty(
+                self,
+                'infraredLevel',
+                {
+                    'label': 'Infrared Level',
+                    'type': 'integer',
+                    'unit': 'percent',
+                    'minimum': 0,
+                    'maximum': 100,
+                },
+                self.infrared_level()
+            )
+
+        self.properties['on'] = LifxBulbProperty(
+            self,
+            'on',
+            {
+                '@type': 'OnOffProperty',
+                'label': 'On/Off',
+                'type': 'boolean'
+            },
+            self.is_on()
+        )
 
     def poll(self):
         """Poll the device for changes."""
@@ -136,6 +157,10 @@ class LifxBulb(LifxDevice):
         # the only bulb that doesn't support temperature is the mini white,
         # everything else should support it
         return bool(self.lifxlan_dev.supports_temperature())
+
+    def is_infrared(self):
+        """Determine whether or not the light has infrared capabilities."""
+        return bool(self.lifxlan_dev.supports_infrared())
 
     def is_on(self):
         """Determine whether or not the light is on."""
@@ -191,6 +216,29 @@ class LifxBulb(LifxDevice):
                   .format(level, brightness))
 
         self.lifxlan_dev.set_brightness(brightness)
+
+    def infrared_level(self):
+        """Determine the current infrared level of the light."""
+        level = int(self.lifxlan_dev.get_infrared() / 65535.0 * 100.0)
+
+        if _DEBUG:
+            print("Current infrared level: <level:{}>".format(level))
+
+        return level
+
+    def set_infrared_level(self, level):
+        """
+        Set the infrared level of the light.
+
+        level -- new level
+        """
+        value = int(level / 100.0 * 65535.0)
+
+        if _DEBUG:
+            print("Set infrared level: <level:{}, raw:{}>"
+                  .format(value, level))
+
+        self.lifxlan_dev.set_infrared(value)
 
     def temperature(self):
         """Determine the current white temperature of the light."""
