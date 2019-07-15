@@ -1,1 +1,1 @@
-lifxlan>=1.2.5
+git+https://github.com/mrstegeman/lifxlan@ifaddr#egg=lifxlan

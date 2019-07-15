@@ -37,6 +37,7 @@ class LifxAdapter(Adapter):
 
         lan = LifxLAN()
         lan_devices = lan.get_devices()
+        print(lan_devices)
 
         for dev in lan_devices:
             if not self.pairing:

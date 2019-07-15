@@ -1,10 +1,10 @@
 {
   "name": "lifx-adapter",
   "display_name": "LIFX",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "LIFX smart bulb adapter plugin for Mozilla WebThings Gateway",
   "author": "Michael Stegeman",
-  "main": "bootstrap.py",
+  "main": "main.py",
   "keywords": [
     "mozilla",
     "iot",
@@ -23,15 +23,13 @@
   "files": [
     "LICENSE",
     "SHA256SUMS",
-    "bootstrap.py",
+    "lib",
     "main.py",
     "pkg/__init__.py",
     "pkg/lifx_adapter.py",
     "pkg/lifx_device.py",
     "pkg/lifx_property.py",
-    "pkg/util.py",
-    "requirements.txt",
-    "setup.cfg"
+    "pkg/util.py"
   ],
   "moziot": {
     "api": {
@@ -39,6 +37,6 @@
       "max": 2
     },
     "plugin": true,
-    "exec": "python3 {path}/bootstrap.py"
+    "exec": "python3 {path}/main.py"
   }
 }
