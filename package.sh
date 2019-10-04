@@ -20,7 +20,7 @@ find package -type d -empty -delete
 
 # Generate checksums
 cd package
-find . -type f -exec sha256sum {} \; >> SHA256SUMS
+find . -type f \! -name SHA256SUMS -exec sha256sum {} \; >> SHA256SUMS
 cd -
 
 # Make the tarball
