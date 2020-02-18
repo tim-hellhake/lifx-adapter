@@ -30,13 +30,27 @@ class LifxBulbProperty(LifxProperty):
 
         value -- the value to set
         """
+        color_mode_prop = None
+        if 'colorMode' in self.device.properties:
+            color_mode_prop = self.device.properties['colorMode']
+
         if self.name == 'on':
             self.device.set_on(value)
         elif self.name == 'color':
             new_color = rgb_to_hsv(value)
             self.device.set_hsv(new_color)
+
+            # update the colorMode property
+            if color_mode_prop is not None:
+                color_mode_prop.set_cached_value('color')
+                self.device.notify_property_changed(color_mode_prop)
         elif self.name == 'colorTemperature':
             self.device.set_temperature(value)
+
+            # update the colorMode property
+            if color_mode_prop is not None:
+                color_mode_prop.set_cached_value('temperature')
+                self.device.notify_property_changed(color_mode_prop)
         elif self.name == 'level':
             self.device.set_brightness(value)
         elif self.name == 'infraredLevel':
@@ -59,6 +73,8 @@ class LifxBulbProperty(LifxProperty):
             value = hsv_to_rgb(*self.device.hsv())
         elif self.name == 'colorTemperature':
             value = self.device.temperature()
+        elif self.name == 'colorMode':
+            value = self.device.color_mode()
         elif self.name == 'level':
             value = self.device.brightness()
         elif self.name == 'infraredLevel':

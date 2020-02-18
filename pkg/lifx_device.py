@@ -55,10 +55,6 @@ class LifxBulb(LifxDevice):
         self._type.extend(['OnOffSwitch', 'Light'])
 
         if self.is_color():
-            if _DEBUG:
-                print("Bulb supports color")
-
-            self.type = 'onOffColorLight'
             self._type.append('ColorControl')
 
             self.properties['color'] = LifxBulbProperty(
@@ -66,24 +62,22 @@ class LifxBulb(LifxDevice):
                 'color',
                 {
                     '@type': 'ColorProperty',
-                    'label': 'Color',
+                    'title': 'Color',
                     'type': 'string',
                 },
                 hsv_to_rgb(*self.hsv())
             )
-        elif self.is_white_temperature():
-            if _DEBUG:
-                print("Bulb supports white temperature")
 
-            self.type = 'dimmableColorLight'
-            self._type.append('ColorControl')
+        if self.is_white_temperature():
+            if 'ColorControl' not in self._type:
+                self._type.append('ColorControl')
 
             self.properties['colorTemperature'] = LifxBulbProperty(
                 self,
                 'colorTemperature',
                 {
                     '@type': 'ColorTemperatureProperty',
-                    'label': 'Color Temperature',
+                    'title': 'Color Temperature',
                     'type': 'integer',
                     'unit': 'kelvin',
                     'minimum': lifxlan_dev.get_min_kelvin(),
@@ -91,33 +85,44 @@ class LifxBulb(LifxDevice):
                 },
                 self.temperature()
             )
-        else:
-            if _DEBUG:
-                print("Bulb supports dimming")
 
-            self.type = 'dimmableLight'
-
-        if not self.is_color():
-            self.properties['level'] = LifxBulbProperty(
+        if self.is_color() and self.is_white_temperature():
+            self.properties['colorMode'] = LifxBulbProperty(
                 self,
-                'level',
+                'colorMode',
                 {
-                    '@type': 'BrightnessProperty',
-                    'label': 'Brightness',
-                    'type': 'integer',
-                    'unit': 'percent',
-                    'minimum': 0,
-                    'maximum': 100,
+                    '@type': 'ColorModeProperty',
+                    'title': 'Color Mode',
+                    'type': 'string',
+                    'enum': [
+                        'color',
+                        'temperature',
+                    ],
+                    'readOnly': True,
                 },
-                self.brightness()
+                self.color_mode()
             )
+
+        self.properties['level'] = LifxBulbProperty(
+            self,
+            'level',
+            {
+                '@type': 'BrightnessProperty',
+                'title': 'Brightness',
+                'type': 'integer',
+                'unit': 'percent',
+                'minimum': 0,
+                'maximum': 100,
+            },
+            self.brightness()
+        )
 
         if self.is_infrared():
             self.properties['infraredLevel'] = LifxBulbProperty(
                 self,
                 'infraredLevel',
                 {
-                    'label': 'Infrared Level',
+                    'title': 'Infrared Level',
                     'type': 'integer',
                     'unit': 'percent',
                     'minimum': 0,
@@ -131,7 +136,7 @@ class LifxBulb(LifxDevice):
             'on',
             {
                 '@type': 'OnOffProperty',
-                'label': 'On/Off',
+                'title': 'On/Off',
                 'type': 'boolean'
             },
             self.is_on()
@@ -191,7 +196,7 @@ class LifxBulb(LifxDevice):
         if _DEBUG:
             print("Set HSV: <hue:{}, sat:{}, bright:{}>".format(*value))
 
-        value = list(value) + [3500]
+        value = list(value) + [0]
         self.lifxlan_dev.set_color(value)
 
     def brightness(self):
@@ -258,4 +263,12 @@ class LifxBulb(LifxDevice):
         if _DEBUG:
             print("Set color temperature: <temp:{}>".format(value))
 
-        self.lifxlan_dev.set_colortemp(value)
+        self.lifxlan_dev.set_color((0, 0, self.hsv()[2], value))
+
+    def color_mode(self):
+        """Determine the current color mode."""
+        hsv = self.hsv()
+        if hsv[1] == 0:
+            return 'temperature'
+
+        return 'color'
