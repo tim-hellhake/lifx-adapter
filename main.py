@@ -1,4 +1,4 @@
-"""Lifx adapter for Mozilla WebThings Gateway."""
+"""LIFX adapter for WebThings Gateway."""
 
 from os import path
 import functools

@@ -1,4 +1,4 @@
-"""Lifx adapter for Mozilla WebThings Gateway."""
+"""LIFX adapter for WebThings Gateway."""
 
 from gateway_addon import Adapter
 from lifxlan import LifxLAN
@@ -10,7 +10,7 @@ _TIMEOUT = 3
 
 
 class LifxAdapter(Adapter):
-    """Adapter for Lifx smart home devices."""
+    """Adapter for LIFX smart home devices."""
 
     def __init__(self, verbose=False):
         """

@@ -1,4 +1,4 @@
-"""Lifx adapter for Mozilla WebThings Gateway."""
+"""LIFX adapter for WebThings Gateway."""
 
 from gateway_addon import Device
 import functools
@@ -15,7 +15,7 @@ _DEBUG = False
 
 
 class LifxDevice(Device):
-    """Lifx device type."""
+    """LIFX device type."""
 
     def __init__(self, adapter, _id, lifxlan_dev):
         """
@@ -40,7 +40,7 @@ class LifxDevice(Device):
 
 
 class LifxBulb(LifxDevice):
-    """Lifx smart bulb type."""
+    """LIFX smart bulb type."""
 
     def __init__(self, adapter, _id, lifxlan_dev):
         """

@@ -1,4 +1,4 @@
-"""Lifx adapter for Mozilla WebThings Gateway."""
+"""LIFX adapter for WebThings Gateway."""
 
 from gateway_addon import Property
 
@@ -6,7 +6,7 @@ from .util import hsv_to_rgb, rgb_to_hsv
 
 
 class LifxProperty(Property):
-    """Lifx property type."""
+    """LIFX property type."""
 
     def __init__(self, device, name, description, value):
         """
@@ -22,7 +22,7 @@ class LifxProperty(Property):
 
 
 class LifxBulbProperty(LifxProperty):
-    """Property type for Lifx smart bulbs."""
+    """Property type for LIFX smart bulbs."""
 
     def set_value(self, value):
         """

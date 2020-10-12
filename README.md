@@ -1,8 +1,8 @@
 # lifx-adapter
 
-LIFX smart bulb adapter for Mozilla WebThings Gateway.
+LIFX smart bulb adapter for WebThings Gateway.
 
-Largely derived from https://github.com/mozilla-iot/tplink-adapter
+Largely derived from https://github.com/WebThingsIO/tplink-adapter
 
 There are no settings, the adapter will automatically discover any LIFX bulbs on the same local network, and you can then add them individually.
 
@@ -25,9 +25,7 @@ Bulb names are reported by the LIFX API, so they should automatically show up in
 If you're running this add-on outside of the official gateway image for the Raspberry Pi, i.e. you're running on a development machine, you'll need to do the following (adapt as necessary for non-Ubuntu/Debian):
 
 ```
-sudo apt install python3-dev libnanomsg-dev
-sudo pip3 install nnpy
-sudo pip3 install git+https://github.com/mozilla-iot/gateway-addon-python.git
+sudo pip3 install git+https://github.com/WebThingsIO/gateway-addon-python.git
 ```
 
 
@@ -43,7 +41,7 @@ git clone https://github.com/mrstegeman/lifx-adapter.git
 ./package.sh
 ```
 
-Then restart the gateway and the Lifx addon should be available. 
+Then restart the gateway and the LIFX addon should be available. 
 
 # Troubleshooting
 

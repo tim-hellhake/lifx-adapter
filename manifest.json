@@ -1,6 +1,6 @@
 {
   "author": "Michael Stegeman",
-  "description": "LIFX smart bulb adapter plugin for Mozilla WebThings Gateway",
+  "description": "LIFX smart bulb adapter plugin for WebThings Gateway",
   "gateway_specific_settings": {
     "webthings": {
       "exec": "python3 {path}/main.py",
@@ -15,5 +15,5 @@
   "manifest_version": 1,
   "name": "LIFX",
   "short_name": "LIFX",
-  "version": "0.4.1"
+  "version": "0.4.2"
 }
