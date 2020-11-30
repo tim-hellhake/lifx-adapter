@@ -142,6 +142,35 @@ class LifxBulb(LifxDevice):
             self.is_on()
         )
 
+        self.add_action(
+            'fade',
+            {
+                'title': 'Fade',
+                'description': 'Fade the light',
+                '@type': 'FadeAction',
+                'input': {
+                    'type': 'object',
+                    'required': [
+                        'level',
+                        'duration',
+                    ],
+                    'properties': {
+                        'level': {
+                            'type': 'integer',
+                            'unit': 'percent',
+                            'minimum': 0,
+                            'maximum': 100,
+                        },
+                        'duration': {
+                            'type': 'integer',
+                            'unit': 'second',
+                            'minimum': 0,
+                        },
+                    },
+                },
+            }
+        )
+
     def poll(self):
         """Poll the device for changes."""
         while True:
@@ -208,7 +237,7 @@ class LifxBulb(LifxDevice):
 
         return int(brightness / 65535.0 * 100.0)
 
-    def set_brightness(self, level):
+    def set_brightness(self, level, duration=0):
         """
         Set the brightness of the light.
 
@@ -220,7 +249,7 @@ class LifxBulb(LifxDevice):
             print("Set brightness: <bright:{}, raw:{}>"
                   .format(level, brightness))
 
-        self.lifxlan_dev.set_brightness(brightness)
+        self.lifxlan_dev.set_brightness(brightness, duration=duration)
 
     def infrared_level(self):
         """Determine the current infrared level of the light."""
@@ -272,3 +301,28 @@ class LifxBulb(LifxDevice):
             return 'temperature'
 
         return 'color'
+
+    def perform_action(self, action):
+        """
+        Perform an action requested by the user.
+
+        action -- the action object
+        """
+        action.start()
+
+        if action.name == 'fade':
+            def f(adapter, _action):
+                adapter.set_brightness(
+                    _action.input['level'],
+                    _action.input['duration'] * 1000
+                )
+
+                time.sleep(_action.input['duration'])
+                _action.finish()
+
+            t = threading.Thread(target=f, args=(self, action))
+            t.daemon = True
+            t.start()
+            return
+
+        action.finish()
